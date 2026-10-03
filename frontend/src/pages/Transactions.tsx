@@ -20,43 +20,68 @@ export default function Transactions() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold">Transaction History</h1>
-        <p className="text-sm text-gray-500 mt-1">All transfers from your account.</p>
+        <h1 className="text-2xl font-bold">Transaction History</h1>
+        <p className="text-sm text-gray-500 mt-1">All transfers from your account</p>
       </div>
 
-      {message && <p className="text-sm text-green-700 bg-green-50 p-2 rounded">{message}</p>}
-      {error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>}
+      {message && <p className="text-sm text-green-700 bg-green-50 p-3 rounded-lg">{message}</p>}
+      {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</p>}
 
-      <div className="bg-white border border-gray-200 rounded-lg p-5 overflow-x-auto">
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
         {rows.length === 0 ? (
-          <p className="text-sm text-gray-500">No transactions yet.</p>
+          <p className="text-sm text-gray-500 p-6 text-center">No transactions yet.</p>
         ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b">
-                <th className="py-2 pr-3">Date</th>
-                <th className="py-2 pr-3">Beneficiary</th>
-                <th className="py-2 pr-3">Account</th>
-                <th className="py-2 pr-3">Amount</th>
-                <th className="py-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((tx) => (
-                <tr key={tx.id} className="border-b border-gray-100">
-                  <td className="py-2 pr-3">{new Date(tx.created_at).toLocaleString()}</td>
-                  <td className="py-2 pr-3">{tx.beneficiary_name}</td>
-                  <td className="py-2 pr-3">{tx.beneficiary_account}</td>
-                  <td className="py-2 pr-3">{formatINR(tx.amount)}</td>
-                  <td className="py-2">
-                    <span className={tx.status === "COMPLETED" ? "text-green-700" : "text-red-600"}>
-                      {tx.status}
-                    </span>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-500 border-b bg-gray-50">
+                  <th className="py-3 px-4">Date</th>
+                  <th className="py-3 px-4">Reference</th>
+                  <th className="py-3 px-4">Beneficiary</th>
+                  <th className="py-3 px-4">Account</th>
+                  <th className="py-3 px-4">Amount</th>
+                  <th className="py-3 px-4">Remark</th>
+                  <th className="py-3 px-4">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((tx) => (
+                  <tr key={tx.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-3 px-4 text-gray-600 whitespace-nowrap">
+                      {new Date(tx.created_at).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs text-gray-500">{tx.reference_id}</td>
+                    <td className="py-3 px-4 font-medium">{tx.beneficiary_name}</td>
+                    <td className="py-3 px-4 font-mono text-sm">{tx.beneficiary_account}</td>
+                    <td className="py-3 px-4 font-medium">{formatINR(tx.amount)}</td>
+                    <td className="py-3 px-4 text-gray-500 text-sm">{tx.remark || "—"}</td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          tx.status === "COMPLETED"
+                            ? "bg-green-100 text-green-800"
+                            : tx.status === "PENDING"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {tx.status}
+                      </span>
+                      {tx.failure_reason && (
+                        <p className="text-xs text-red-500 mt-1">{tx.failure_reason}</p>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

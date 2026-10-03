@@ -1,28 +1,66 @@
 const API_BASE = "http://127.0.0.1:8000";
 
+// ─── Types ──────────────────────────────────────────
+
 export type Account = {
   account_number: string;
+  ifsc_code: string;
   balance: number;
   user_name: string;
+  user_phone: string;
+  masked_phone: string;
+};
+
+export type UserProfile = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  masked_phone: string;
+  account_number: string;
+  ifsc_code: string;
+  balance: number;
+  created_at: string;
 };
 
 export type Beneficiary = {
   id: number;
   name: string;
   account_number: string;
+  ifsc_code: string;
   bank_name: string;
+  nickname?: string;
   created_at: string;
   masked_account?: string;
 };
 
 export type Transaction = {
   id: number;
+  reference_id: string;
   beneficiary_name: string;
   beneficiary_account: string;
   amount: number;
+  remark?: string;
   status: string;
+  failure_reason?: string;
   created_at: string;
 };
+
+export type LoginResponse = {
+  access_token: string;
+  token_type: string;
+  message: string;
+  requires_otp: boolean;
+  otp_display?: string;
+};
+
+export type OTPResponse = {
+  message: string;
+  otp_display: string;
+  expires_in: number;
+};
+
+// ─── Helpers ──────────────────────────────────────────
 
 function authHeaders(token: string | null): HeadersInit {
   const headers: HeadersInit = { "Content-Type": "application/json" };
@@ -49,23 +87,47 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return res.json();
 }
 
-export async function register(name: string, email: string, password: string) {
+// ─── Auth ──────────────────────────────────────────
+
+export async function register(name: string, email: string, phone: string, password: string) {
   const res = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
     headers: authHeaders(null),
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ name, email, phone, password }),
   });
   return handleResponse(res);
 }
 
-export async function login(email: string, password: string) {
+export async function login(email: string, password: string): Promise<LoginResponse> {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
     headers: authHeaders(null),
     body: JSON.stringify({ email, password }),
   });
-  return handleResponse<{ access_token: string; message: string }>(res);
+  return handleResponse<LoginResponse>(res);
 }
+
+// ─── OTP ──────────────────────────────────────────
+
+export async function requestOTP(token: string, purpose: string = "LOGIN"): Promise<OTPResponse> {
+  const res = await fetch(`${API_BASE}/auth/otp/generate`, {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ purpose }),
+  });
+  return handleResponse<OTPResponse>(res);
+}
+
+export async function verifyOTP(token: string, code: string, purpose: string = "LOGIN") {
+  const res = await fetch(`${API_BASE}/auth/otp/verify`, {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ code, purpose }),
+  });
+  return handleResponse<{ message: string; verified: boolean }>(res);
+}
+
+// ─── Account ──────────────────────────────────────────
 
 export async function getAccount(token: string) {
   const res = await fetch(`${API_BASE}/account`, {
@@ -73,6 +135,15 @@ export async function getAccount(token: string) {
   });
   return handleResponse<Account>(res);
 }
+
+export async function getProfile(token: string) {
+  const res = await fetch(`${API_BASE}/account/profile`, {
+    headers: authHeaders(token),
+  });
+  return handleResponse<UserProfile>(res);
+}
+
+// ─── Beneficiaries ──────────────────────────────────────────
 
 export async function getBeneficiaries(token: string) {
   const res = await fetch(`${API_BASE}/beneficiaries`, {
@@ -83,14 +154,12 @@ export async function getBeneficiaries(token: string) {
 
 export async function addBeneficiary(
   token: string,
-  name: string,
-  account_number: string,
-  bank_name: string,
+  data: { name: string; account_number: string; ifsc_code: string; bank_name: string; nickname?: string },
 ) {
   const res = await fetch(`${API_BASE}/beneficiaries`, {
     method: "POST",
     headers: authHeaders(token),
-    body: JSON.stringify({ name, account_number, bank_name }),
+    body: JSON.stringify(data),
   });
   return handleResponse<Beneficiary>(res);
 }
@@ -103,6 +172,8 @@ export async function deleteBeneficiary(token: string, id: number) {
   return handleResponse<void>(res);
 }
 
+// ─── Transactions ──────────────────────────────────────────
+
 export async function getTransactions(token: string) {
   const res = await fetch(`${API_BASE}/transactions`, {
     headers: authHeaders(token),
@@ -110,14 +181,21 @@ export async function getTransactions(token: string) {
   return handleResponse<Transaction[]>(res);
 }
 
-export async function createTransaction(token: string, beneficiary_id: number, amount: number) {
+export async function createTransaction(
+  token: string,
+  beneficiary_id: number,
+  amount: number,
+  remark?: string,
+) {
   const res = await fetch(`${API_BASE}/transactions`, {
     method: "POST",
     headers: authHeaders(token),
-    body: JSON.stringify({ beneficiary_id, amount }),
+    body: JSON.stringify({ beneficiary_id, amount, remark: remark || null }),
   });
   return handleResponse<Transaction>(res);
 }
+
+// ─── Formatting ──────────────────────────────────────────
 
 export function formatINR(amount: number): string {
   return new Intl.NumberFormat("en-IN", {

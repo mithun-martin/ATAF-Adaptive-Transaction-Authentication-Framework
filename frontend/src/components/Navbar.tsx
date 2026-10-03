@@ -9,8 +9,8 @@ export default function Navbar() {
 
   return (
     <nav className="bg-blue-900 text-white px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-      <Link to="/dashboard" className="font-semibold text-lg">
-        Simulated Bank
+      <Link to="/dashboard" className="font-semibold text-lg tracking-tight">
+        🏦 SimBank
       </Link>
       <div className="flex flex-wrap items-center gap-1">
         <NavLink to="/dashboard" className={linkClass}>
@@ -24,6 +24,9 @@ export default function Navbar() {
         </NavLink>
         <NavLink to="/transactions" className={linkClass}>
           Transactions
+        </NavLink>
+        <NavLink to="/profile" className={linkClass}>
+          Profile
         </NavLink>
         <button
           onClick={logout}

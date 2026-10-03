@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import random
+import string
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -50,8 +51,15 @@ def get_current_user(
     return user
 
 
+# Alias — later project steps will replace this with OTP-verified check
 get_verified_user = get_current_user
 
 
 def generate_account_number() -> str:
+    """Generate a realistic 10-digit bank account number."""
     return f"{random.randint(1000000000, 9999999999)}"
+
+
+def generate_otp(length: int = 6) -> str:
+    """Generate a numeric OTP of given length."""
+    return "".join(random.choices(string.digits, k=length))

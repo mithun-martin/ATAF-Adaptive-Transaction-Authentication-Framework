@@ -6,14 +6,9 @@ from database import get_db
 from models.user import User
 from schemas.transaction import TransactionCreate, TransactionOut
 from services import transaction_service
+from utils import mask_account
 
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
-
-
-def mask_account(account_number: str) -> str:
-    if len(account_number) <= 4:
-        return account_number
-    return "XXXX" + account_number[-4:]
 
 
 @router.post("", response_model=TransactionOut, status_code=201)
@@ -33,14 +28,18 @@ def create_transaction(
         user=user,
         beneficiary_id=payload.beneficiary_id,
         amount=payload.amount,
+        remark=payload.remark,
     )
 
     return TransactionOut(
         id=tx.id,
+        reference_id=tx.reference_id,
         beneficiary_name=tx.beneficiary.name,
         beneficiary_account=mask_account(tx.beneficiary.account_number),
         amount=float(tx.amount),
+        remark=tx.remark,
         status=tx.status,
+        failure_reason=tx.failure_reason,
         created_at=tx.created_at,
     )
 
@@ -56,10 +55,13 @@ def get_transactions(
         result.append(
             TransactionOut(
                 id=tx.id,
+                reference_id=tx.reference_id,
                 beneficiary_name=tx.beneficiary.name if tx.beneficiary else "Unknown",
                 beneficiary_account=mask_account(tx.beneficiary.account_number) if tx.beneficiary else "",
                 amount=float(tx.amount),
+                remark=tx.remark,
                 status=tx.status,
+                failure_reason=tx.failure_reason,
                 created_at=tx.created_at,
             )
         )

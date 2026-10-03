@@ -13,8 +13,10 @@ class Beneficiary(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     account_number: Mapped[str] = mapped_column(String(20), nullable=False)
+    ifsc_code: Mapped[str] = mapped_column(String(11), nullable=False, default="OTHR0001234")
     bank_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    nickname: Mapped[str] = mapped_column(String(50), nullable=True)  # Optional friendly name
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="beneficiaries")
     transactions = relationship("Transaction", back_populates="beneficiary")

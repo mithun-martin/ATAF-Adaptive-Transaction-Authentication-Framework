@@ -1,3 +1,5 @@
+import random
+import string
 from decimal import Decimal
 
 from fastapi import HTTPException, status
@@ -9,11 +11,18 @@ from models.transaction import Transaction
 from models.user import User
 
 
+def generate_reference_id() -> str:
+    """Generate a unique transaction reference ID like TXN-XXXXXX."""
+    chars = string.ascii_uppercase + string.digits
+    return "TXN" + "".join(random.choices(chars, k=10))
+
+
 def transfer_money(
     db: Session,
     user: User,
     beneficiary_id: int,
     amount: Decimal,
+    remark: str | None = None,
 ) -> Transaction:
     """
     Execute a money transfer.
@@ -37,12 +46,20 @@ def transfer_money(
     amount = Decimal(str(amount)).quantize(Decimal("0.01"))
     current_balance = Decimal(str(account.balance))
 
+    # Generate unique reference ID
+    ref_id = generate_reference_id()
+    while db.query(Transaction).filter(Transaction.reference_id == ref_id).first():
+        ref_id = generate_reference_id()
+
     if amount > current_balance:
         failed = Transaction(
+            reference_id=ref_id,
             sender_account_id=account.id,
             beneficiary_id=beneficiary.id,
             amount=float(amount),
+            remark=remark,
             status="FAILED",
+            failure_reason="Insufficient balance",
         )
         db.add(failed)
         db.commit()
@@ -55,9 +72,11 @@ def transfer_money(
     account.balance = float(current_balance - amount)
 
     completed = Transaction(
+        reference_id=ref_id,
         sender_account_id=account.id,
         beneficiary_id=beneficiary.id,
         amount=float(amount),
+        remark=remark,
         status="COMPLETED",
     )
     db.add(completed)
