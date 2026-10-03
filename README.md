@@ -1,90 +1,98 @@
-# ATAF — Step 1: Simulated Banking Environment
+﻿# ATAF — Adaptive Transaction Authentication Framework
 
-Part of [ATAF — Adaptive Transaction Authentication Framework](https://github.com/mithun-martin/ATAF-Adaptive-Transaction-Authentication-Framework).
+This repository contains the Step 1 implementation of the project: a working simulated banking environment used to test and compare three authentication designs:
 
-**This repository / folder currently contains ONLY Step 1.**
+1. Baseline: Password → OTP → Transaction
+2. Static 3FA: Password → OTP → Extra Verification → Transaction
+3. Proposed adaptive system: Password → OTP → AI Risk Assessment → Adaptive Verification → Transaction
 
-Later steps (baseline auth, static 3FA, AI risk model, adaptive policy, attack scenarios, evaluation, IEEE paper) are **not** implemented here.
+## Current status
+
+This branch includes Step 1 only: the simulated banking app and transactional flow. The later security and AI stages are not yet implemented here.
 
 ## What Step 1 includes
 
-- User registration / login (JWT)
-- Account dashboard + balance (starting balance ₹1,00,000)
-- Beneficiary management (add / view / delete)
-- Money transfer with confirmation
-- Transaction history (COMPLETED / FAILED)
+- User registration and login
+- Account dashboard with balance view
+- Beneficiary management
+- Money transfer flow
+- Transaction history
+- OTP-style confirmation interface within the banking workflow
 
-## Stack
+## Tech stack
 
-| Layer | Tech |
-|-------|------|
+| Layer | Stack |
+|-------|-------|
 | Backend | Python, FastAPI, SQLAlchemy, PostgreSQL, Pydantic |
-| Frontend | React, Vite, TypeScript, Tailwind CSS |
+| Frontend | React, Vite, TypeScript |
 
-## PostgreSQL
+## Project structure
 
-`	ext
-database: banking_db
-user:     banking
-password: banking
-`
+- backend/ — FastAPI API, models, routes, schemas, and transaction logic
+- frontend/ — React app for login, dashboard, transfers, beneficiaries, and transaction history
 
-Copy ackend/.env.example to ackend/.env and adjust if needed:
+## Local setup
 
-`	ext
-DATABASE_URL=postgresql://banking:banking@localhost:5432/banking_db
-SECRET_KEY=dev-secret-key-change-later
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-`
+### Backend
 
-## Run backend
-
-`powershell
+```powershell
 cd backend
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+copy .env.example .env
 uvicorn main:app --reload --port 8000
-`
+```
 
 - API: http://127.0.0.1:8000
-- Docs: http://127.0.0.1:8000/docs
+- Swagger docs: http://127.0.0.1:8000/docs
 
-## Run frontend
+### Frontend
 
-`powershell
+```powershell
 cd frontend
 npm install
 npm run dev
-`
+```
 
 Open: http://localhost:5173
 
-## API endpoints
+## Database configuration
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | /auth/register | Register + create bank account |
-| POST | /auth/login | Login (JWT) |
-| GET | /account | Own account + balance |
-| GET/POST | /beneficiaries | List / add beneficiaries |
-| DELETE | /beneficiaries/{id} | Delete beneficiary |
-| GET/POST | /transactions | History / transfer |
+Example backend environment variables:
 
-## Flow
+```env
+DATABASE_URL=postgresql://banking:banking@localhost:5432/banking_db
+SECRET_KEY=dev-secret-key-change-later
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+```
 
-`	ext
-Register → Login → Dashboard
-  → Add Beneficiary → Send Money → Confirm
-  → Balance check → Deduct → Record → History
-`
+## Step 1 flow
 
-Transaction logic is separated in ackend/services/transaction_service.py so later authentication steps can wrap transfers without rewriting the banking core.
+Register → Login → Dashboard → Add Beneficiary → Transfer Funds → View Balance → Record Transactions
 
-## Not in this step
+This step deliberately focuses on the banking domain and transaction workflow so the next team member can add security layers without reworking the core app logic.
 
-- Baseline OTP auth / Static 3FA
-- AI risk scoring / fraud detection
-- Adaptive authentication
-- Transaction-bound crypto verification
-- Attack scenarios / experimental evaluation
+## What is not included yet
+
+- Baseline OTP-only auth enforcement
+- Static 3FA check on every transaction
+- AI fraud/risk scoring
+- Adaptive verification policy
+- Transaction-bound confirmation mechanism
+- Attack scenarios and evaluation
+
+## Handoff for Step 2
+
+The next contributor should continue from this codebase by implementing the Baseline Authentication system:
+
+- Username/password login
+- OTP verification after login
+- Transaction approval flow under the baseline model
+- No AI or dynamic checks yet
+
+The banking application and API foundation are already in place, so Step 2 should focus on authentication logic and transaction gating rather than rebuilding the app itself.
+
+## Repository status
+
+This repository is now synced with the GitHub remote and contains the completed Step 1 setup ready for continuation.
