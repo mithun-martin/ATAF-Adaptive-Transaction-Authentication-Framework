@@ -1,8 +1,12 @@
-﻿# Python
+# Python
 __pycache__/
 *.py[cod]
 venv/
+.venv/
 *.egg-info/
+*.db
+*.db-shm
+*.db-wal
 
 # Env / secrets
 .env
