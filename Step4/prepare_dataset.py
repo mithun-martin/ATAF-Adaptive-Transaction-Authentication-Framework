@@ -4,7 +4,9 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.pipeline import Pipeline as ImbPipeline
 
 # Configuration
 RAW_DIR = "data/raw"
@@ -46,12 +48,23 @@ def reduce_mem_usage(df):
     return df
 
 def load_and_merge_data():
-    print("Loading data...")
+    print("Loading data in chunks to save memory...")
     if not os.path.exists(TRANSACTION_FILE) or not os.path.exists(IDENTITY_FILE):
         raise FileNotFoundError(f"Please download the dataset from Kaggle and place train_transaction.csv and train_identity.csv in {RAW_DIR}")
         
-    df_trans = pd.read_csv(TRANSACTION_FILE)
-    df_id = pd.read_csv(IDENTITY_FILE)
+    trans_chunks = []
+    for chunk in pd.read_csv(TRANSACTION_FILE, chunksize=100000):
+        trans_chunks.append(reduce_mem_usage(chunk))
+    df_trans = pd.concat(trans_chunks, ignore_index=True)
+    del trans_chunks
+    gc.collect()
+
+    id_chunks = []
+    for chunk in pd.read_csv(IDENTITY_FILE, chunksize=100000):
+        id_chunks.append(reduce_mem_usage(chunk))
+    df_id = pd.concat(id_chunks, ignore_index=True)
+    del id_chunks
+    gc.collect()
     
     print("Merging data...")
     df = pd.merge(df_trans, df_id, on='TransactionID', how='left')
@@ -108,12 +121,22 @@ def split_and_balance(df):
     
     print(f"Original training shape: {X_train.shape}, Class distribution: \n{y_train.value_counts()}")
     
-    # Apply SMOTE to handle class imbalance ONLY on training data
-    print("Applying SMOTE to balance the training classes...")
-    smote = SMOTE(random_state=42, sampling_strategy=0.2) # Oversample minority to 20% of majority to avoid explosion
-    X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
+    # Step 1: Undersample majority class down to 10x the minority count (saves memory)
+    # Step 2: Oversample minority class up to 1:3 ratio using simple duplication (no KNN needed)
+    # This is far lighter than SMOTE which needs to fit KNN across 358 features
+    minority_count = y_train.sum()
+    majority_target = int(minority_count * 10)   # majority -> 10x minority
+    minority_target = int(minority_count * 3)     # minority -> 3x (1:3.3 ratio after step1)
+
+    pipeline = ImbPipeline([
+        ('under', RandomUnderSampler(sampling_strategy={0: majority_target}, random_state=42)),
+        ('over',  RandomOverSampler(sampling_strategy={1: minority_target}, random_state=42)),
+    ])
+    X_train_res, y_train_res = pipeline.fit_resample(X_train, y_train)
+    del X_train, y_train
+    gc.collect()
     
-    print(f"Balanced training shape: {X_train_res.shape}, Class distribution: \n{y_train_res.value_counts()}")
+    print(f"Balanced training shape: {X_train_res.shape}, Class distribution: \n{pd.Series(y_train_res).value_counts()}")
     
     return X_train_res, X_val, X_test, y_train_res, y_val, y_test
 
