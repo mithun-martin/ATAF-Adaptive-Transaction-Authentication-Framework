@@ -1,0 +1,24 @@
+============================================================
+  ATAF -- Step 5 Model Training Summary
+============================================================
+
+Models trained on balanced IEEE-CIS Fraud Detection dataset.
+Risk score = P(isFraud=1) output from predict_proba().
+
+  Logistic Regression
+    saved_to: models/logistic_regression.pkl
+    val_mean_risk_score: 0.3150
+
+  Random Forest
+    saved_to: models/random_forest.pkl
+    val_mean_risk_score: 0.2932
+    feature_importance_plot: outputs/feature_importance_rf.png
+
+  XGBoost
+    saved_to: models/xgboost.pkl
+    val_mean_risk_score: 0.2021
+    feature_importance_plot: outputs/feature_importance_xgb.png
+
+Next -> Step 6: Evaluate and select the best model
+  Run: python ../Step6/evaluate_models.py
+============================================================
