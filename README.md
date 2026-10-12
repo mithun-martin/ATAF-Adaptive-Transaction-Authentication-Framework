@@ -57,6 +57,13 @@ Each step of the ATAF project plan is housed in its own self-contained, fully wo
   * Generated ROC curves, PR curves, confusion matrix heatmaps, and threshold analysis curves.
   * **Selected Model: XGBoost** (ROC-AUC: **0.9468**, PR-AUC: **0.6926**, Fraud Recall: **82.45%**, FPR: **7.34%**).
 
+* **[Step 7 — Design the Adaptive Security Policy](./Step7/)** (Responsible: Mithun + Aditya) ✅
+  * Tri-tier adaptive risk policy engine mapping continuous risk scores $R \in [0.0, 1.0]$ into dynamic authentication tiers:
+    - **LOW RISK ($R < 0.30$):** Normal 2FA (Password + OTP) for low user friction.
+    - **MEDIUM RISK ($0.30 \le R < 0.70$):** Anti-Social-Engineering Advisory Warning Banner + OTP.
+    - **HIGH RISK ($R \ge 0.70$):** Strong 3FA (Transaction-bound HMAC-SHA256 seal + Security PIN).
+  * Fail-secure fallback architecture and 100% unit-tested decision engine.
+
 ---
 
 ## Model Evaluation Leaderboard (Step 6)
@@ -120,15 +127,10 @@ python evaluate_models.py
 
 ## Next Steps (Project Roadmap)
 
-* **Step 7 — Design the Adaptive Security Policy (Mithun + Aditya):**
-  Configure the tri-tier adaptive risk policy using the XGBoost risk score:
-  - **LOW RISK ($R < \tau_1$):** Normal 2FA (Password + OTP).
-  - **MEDIUM RISK ($\tau_1 \le R < \tau_2$):** Visual warning banner detailing transaction flags + OTP.
-  - **HIGH RISK ($R \ge \tau_2$):** Transaction-bound verification with cryptographic affirmation and security PIN.
 * **Step 8 — Implement Transaction-Bound Verification (Aditya):**
-  Cryptographic binding (HMAC-SHA256 seal) and explicit transaction detail affirmations.
+  Formalize transaction-bound verification mechanism with explicit confirmation questions and HMAC-SHA256 parameter binding seals for high-risk transfers.
 * **Step 9 — Integrate the Proposed System (All):**
-  Full adaptive end-to-end banking pipeline (System 3).
+  Full adaptive end-to-end banking pipeline (System 3) connecting the banking app (Step 1), policy engine (Step 7), and transaction binding (Step 8).
 * **Step 10 — Create Social-Engineering Attack Scenarios (Aditya)**
 * **Step 11 — Run Experimental Comparison (All)**
 * **Step 12 — Usability Evaluation (Mithun + Aditya)**
