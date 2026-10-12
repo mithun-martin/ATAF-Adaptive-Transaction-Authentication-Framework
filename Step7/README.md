@@ -70,15 +70,22 @@ Based on the test evaluation curves produced in Step 6 (`Step6/outputs/threshold
 ### 1. Run Unit Test Suite
 ```bash
 cd Step7
-uv run --with pytest --with pydantic --with joblib --with numpy --with scikit-learn pytest -v test_policy_engine.py
+uv run --with-requirements requirements.txt pytest -v test_policy_engine.py
 ```
 *(All 8 unit tests pass covering low, medium, high, boundary conditions, and fail-secure triggers).*
 
 ### 2. Run Interactive Scenario Demo
-```bash
+Using the local virtual environment:
+```fish
 cd Step7
-uv run --with pydantic --with joblib --with numpy python demo_policy.py
+source .venv/bin/activate.fish
+python demo_policy.py
 ```
+Or directly with `uv`:
+```bash
+uv run --with-requirements requirements.txt python demo_policy.py
+```
+
 Simulates 5 real-world scenarios:
 1. Routine Grocery Transfer ($\to$ 🟢 LOW RISK)
 2. Moderate Rent Payment ($\to$ 🟢 LOW RISK)
