@@ -1,0 +1,49 @@
+==============================================================
+  ATAF -- Step 6: Model Evaluation Report
+==============================================================
+
+  Evaluation threshold: 0.5
+  Primary metric:       PR-AUC (best for imbalanced fraud data)
+
+  METRICS TABLE
+--------------------------------------------------------------
+              Model  Precision  Recall  F1-Score  ROC-AUC  PR-AUC    FPR    FNR   TP    FP    TN  FN
+Logistic Regression     0.1346  0.7215    0.2269   0.8559  0.4042 0.1681 0.2785 2236 14372 71110 863
+      Random Forest     0.1893  0.7512    0.3024   0.8950  0.5499 0.1166 0.2488 2328  9969 75513 771
+            XGBoost     0.2894  0.8245    0.4284   0.9468  0.6926 0.0734 0.1755 2555  6274 79208 544
+
+--------------------------------------------------------------
+  CLASSIFICATION REPORTS
+
+  >> Logistic Regression
+     TP=2236  FP=14372  TN=71110  FN=863
+     FPR=0.1681  FNR=0.2785
+
+  >> Random Forest
+     TP=2328  FP=9969  TN=75513  FN=771
+     FPR=0.1166  FNR=0.2488
+
+  >> XGBoost
+     TP=2555  FP=6274  TN=79208  FN=544
+     FPR=0.0734  FNR=0.1755
+
+==============================================================
+  MODEL SELECTION
+==============================================================
+
+  Selected Model : XGBoost
+  PR-AUC         : 0.6926
+  ROC-AUC        : 0.9468
+  F1-Score       : 0.4284
+  Precision      : 0.2894
+  Recall         : 0.8245
+  FPR            : 0.0734
+  FNR            : 0.1755
+
+  Rationale: PR-AUC is the primary criterion for fraud
+  detection because the test set is heavily imbalanced
+  (~3.5% fraud). PR-AUC punishes false positives much
+  more directly than ROC-AUC in this regime.
+
+  This model will be used as the AI Risk Engine in Step 7.
+==============================================================
