@@ -71,6 +71,17 @@ Each step of the ATAF project plan is housed in its own self-contained, fully wo
   * Anti-tampering protection: detects and rejects amount inflation, account redirection, and replay attacks.
   * Verified with 100% passing unit tests (`test_transaction_binding.py`).
 
+* **[Step 9 — Integrate the Proposed System (System 3)](./Step9/)** (Responsible: All) ✅
+  * Complete proposed end-to-end adaptive banking system (System 3) unifying Steps 1 through 8.
+  * Adaptive authentication pipeline:
+    $$\text{Banking App} \longrightarrow \text{Password + OTP} \longrightarrow \text{Transaction} \longrightarrow \text{AI Risk Engine} \longrightarrow \text{Risk Score} \longrightarrow \text{Adaptive Security Policy} \longrightarrow \text{Additional Verification (if needed)} \longrightarrow \text{Authorization}$$
+  * Dynamically evaluates transaction risk via trained XGBoost model and contextual behavioural heuristics.
+  * Calibrated tri-tier policy:
+    - **LOW RISK ($R < 0.30$):** Frictionless 2FA (Password + OTP).
+    - **MEDIUM RISK ($0.30 \le R < 0.70$):** Anti-Social-Engineering Advisory Warning Banner + OTP.
+    - **HIGH RISK ($R \ge 0.70$):** Step-Up 3FA (PSD2 Art. 97 HMAC-SHA256 Transaction-Bound Seal + Affirmations + 4-digit PIN).
+  * Interactive React + Tailwind CSS dashboard and FastAPI backend verified with automated integration test suite (`test_adaptive_system.py`).
+
 ---
 
 ## Model Evaluation Leaderboard (Step 6)
@@ -134,9 +145,8 @@ python evaluate_models.py
 
 ## Next Steps (Project Roadmap)
 
-* **Step 9 — Integrate the Proposed System (All):**
-  Full adaptive end-to-end banking pipeline (System 3) connecting the simulated banking app ([Step 1](./Step1)), the adaptive security policy ([Step 7](./Step7)), and the transaction-bound verification mechanism ([Step 8](./Step8)).
 * **Step 10 — Create Social-Engineering Attack Scenarios (Aditya)**
+  Define representative social-engineering fraud scenarios (bank official impersonation, urgent refund scam, remote access/AnyDesk coercion, fake investment scam) to test against Baseline (System 1), Static 3FA (System 2), and Proposed Adaptive (System 3).
 * **Step 11 — Run Experimental Comparison (All)**
 * **Step 12 — Usability Evaluation (Mithun + Aditya)**
 * **Step 13 — Research Analysis & IEEE Paper (All)**
