@@ -64,6 +64,13 @@ Each step of the ATAF project plan is housed in its own self-contained, fully wo
     - **HIGH RISK ($R \ge 0.70$):** Strong 3FA (Transaction-bound HMAC-SHA256 seal + Security PIN).
   * Fail-secure fallback architecture and 100% unit-tested decision engine.
 
+* **[Step 8 — Implement Transaction-Bound Verification](./Step8/)** (Responsible: Aditya) ✅
+  * Cryptographic dynamic linking complying with PSD2 Article 97 and NIST SP 800-63B.
+  * Formats high-risk confirmation challenge matching ATAF specification:
+    $$\text{HMAC-SHA256}(K_{\text{system}}, \text{challenge\_id} \mathbin{\Vert} \text{sender} \mathbin{\Vert} \text{beneficiary} \mathbin{\Vert} \text{amount} \mathbin{\Vert} \text{currency} \mathbin{\Vert} \text{timestamp} \mathbin{\Vert} \text{nonce})$$
+  * Anti-tampering protection: detects and rejects amount inflation, account redirection, and replay attacks.
+  * Verified with 100% passing unit tests (`test_transaction_binding.py`).
+
 ---
 
 ## Model Evaluation Leaderboard (Step 6)
@@ -127,10 +134,8 @@ python evaluate_models.py
 
 ## Next Steps (Project Roadmap)
 
-* **Step 8 — Implement Transaction-Bound Verification (Aditya):**
-  Formalize transaction-bound verification mechanism with explicit confirmation questions and HMAC-SHA256 parameter binding seals for high-risk transfers.
 * **Step 9 — Integrate the Proposed System (All):**
-  Full adaptive end-to-end banking pipeline (System 3) connecting the banking app (Step 1), policy engine (Step 7), and transaction binding (Step 8).
+  Full adaptive end-to-end banking pipeline (System 3) connecting the simulated banking app ([Step 1](./Step1)), the adaptive security policy ([Step 7](./Step7)), and the transaction-bound verification mechanism ([Step 8](./Step8)).
 * **Step 10 — Create Social-Engineering Attack Scenarios (Aditya)**
 * **Step 11 — Run Experimental Comparison (All)**
 * **Step 12 — Usability Evaluation (Mithun + Aditya)**
