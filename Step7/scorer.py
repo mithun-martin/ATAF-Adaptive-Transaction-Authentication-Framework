@@ -33,7 +33,10 @@ class RiskScorer:
         """Attempts to load serialized XGBoost model."""
         if os.path.exists(self.model_path):
             try:
-                self.model = joblib.load(self.model_path)
+                import warnings
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", category=UserWarning)
+                    self.model = joblib.load(self.model_path)
                 self.is_loaded = True
             except Exception as e:
                 print(f"[Warning] Failed to load model from {self.model_path}: {e}")
