@@ -1,0 +1,93 @@
+{
+  "cohort_size": 50,
+  "metrics": {
+    "System 1 (Baseline 2FA)": {
+      "sus_score": 78.8,
+      "nasa_tlx_workload": 23.4,
+      "user_burden_scale": 0.68,
+      "mean_routine_tct_sec": 16.88,
+      "mean_attack_tct_sec": 16.88,
+      "warning_comprehension_pct": 0.0,
+      "suspicious_detection_pct": 0.0,
+      "habituation_blind_approval_pct": 0.0
+    },
+    "System 2 (Static 3FA)": {
+      "sus_score": 55.3,
+      "nasa_tlx_workload": 58.5,
+      "user_burden_scale": 2.47,
+      "mean_routine_tct_sec": 31.24,
+      "mean_attack_tct_sec": 33.16,
+      "warning_comprehension_pct": 13.0,
+      "suspicious_detection_pct": 13.0,
+      "habituation_blind_approval_pct": 77.0
+    },
+    "System 3 (Proposed Adaptive)": {
+      "sus_score": 84.3,
+      "nasa_tlx_workload": 25.6,
+      "user_burden_scale": 0.83,
+      "mean_routine_tct_sec": 17.68,
+      "mean_attack_tct_sec": 33.94,
+      "warning_comprehension_pct": 97.0,
+      "suspicious_detection_pct": 97.0,
+      "habituation_blind_approval_pct": 3.0
+    }
+  },
+  "statistical_tests": {
+    "sus": {
+      "s1_mean": 78.782,
+      "s1_std": 4.389291058929676,
+      "s2_mean": 55.27,
+      "s2_std": 6.6262583710567755,
+      "s3_mean": 84.31,
+      "s3_std": 5.128011310439946,
+      "anova_f": 390.6800325956252,
+      "anova_p": 1.4813749723300145e-59,
+      "t_test_s3_vs_s2": 23.697007876366428,
+      "p_val_s3_vs_s2": 1.7049755856104249e-28,
+      "cohens_d_s3_vs_s2": 4.901525876098924
+    },
+    "nasa_tlx": {
+      "s1_mean": 23.417999999999996,
+      "s1_std": 2.25961855187994,
+      "s2_mean": 58.456,
+      "s2_std": 4.193669514875964,
+      "s3_mean": 25.608,
+      "s3_std": 2.613644199197741,
+      "anova_f": 1918.1252446663834,
+      "anova_p": 4.790260913824013e-106,
+      "t_test_s3_vs_s2": -55.85431945401414,
+      "p_val_s3_vs_s2": 4.966798091873136e-46,
+      "cohens_d_s3_vs_s2": -9.400888141332786
+    },
+    "ubs": {
+      "s1_mean": 0.6782,
+      "s1_std": 0.08228462796901982,
+      "s2_mean": 2.4667999999999997,
+      "s2_std": 0.13588877805028637,
+      "s3_mean": 0.8316,
+      "s3_std": 0.08360287076410713,
+      "t_test_s3_vs_s2": -72.83618147373483,
+      "p_val_s3_vs_s2": 1.2987061949937518e-51,
+      "cohens_d_s3_vs_s2": -14.494312464269335
+    },
+    "routine_tct": {
+      "s2_mean": 31.236,
+      "s2_std": 4.964485068967375,
+      "s3_mean": 17.682,
+      "s3_std": 2.797405941224834,
+      "time_saved_sec": 13.554000000000002,
+      "t_test": -21.407170566363895,
+      "p_val": 1.6117118919247797e-26,
+      "cohens_d": -3.363804044263579
+    },
+    "attack_security_hci": {
+      "s1_detection_rate_pct": 0.0,
+      "s2_detection_rate_pct": 13.0,
+      "s3_detection_rate_pct": 97.0,
+      "s2_habituation_blind_confirm_pct": 77.0,
+      "s3_habituation_blind_confirm_pct": 3.0,
+      "s2_warning_comprehension_pct": 13.0,
+      "s3_warning_comprehension_pct": 97.0
+    }
+  }
+}

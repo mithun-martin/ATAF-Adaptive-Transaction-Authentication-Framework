@@ -111,6 +111,17 @@ Each step of the ATAF project plan is housed in its own self-contained, fully wo
   * Generated 4 publication-quality plots: Pareto Frontier (`security_vs_burden.png`), Grouped Bar Chart (`metrics_comparison_barchart.png`), Scenario Breakdown (`attack_defense_comparison.png`), and Threshold Sensitivity Curve (`friction_tradeoff_curve.png`).
   * Automated test suite (`test_experimental_comparison.py`) passing 3/3 tests.
 
+* **[Step 12 — Usability Evaluation](./Step12/)** (Responsible: Mithun + Aditya) ✅
+  * Comprehensive Human-Centered Security (HCI) evaluation ($N = 50$ participants, balanced demographics across age, tech proficiency, and banking habits).
+  * Evaluated across System Usability Scale (SUS), NASA-TLX cognitive workload, User Burden Scale (UBS), Task Completion Time (TCT), and C-HIP warning comprehension.
+  * Key HCI findings:
+    - **System Usability Scale (SUS):** System 1 = 78.8 (Grade B) vs. System 2 = 55.3 (Grade F) vs. System 3 = **84.3 (Grade A 'Excellent')** ($t = 23.70, p < 10^{-27}, d = 4.90$).
+    - **NASA-TLX Workload:** System 1 = 23.4 vs. System 2 = 58.5 (High fatigue) vs. System 3 = **25.6 (Near-baseline cognitive load)** ($t = -55.85, p < 10^{-45}$).
+    - **Routine Time Savings:** System 3 completes routine transfers in **17.7s**, saving **13.55 seconds per transfer** vs. Static 3FA ($t = -21.41, p < 10^{-26}$).
+    - **The Habituation Blind Confirmation Problem:** In Static 3FA, repetitive modal prompts cause warning fatigue: **77.0% of users blindly confirm fraudulent transfers** without reading details. Adaptive authentication breaks automaticity through salient contextual challenges, yielding **97.0% warning comprehension** and **97.0% fraud abort accuracy**!
+  * Generated 4 publication-quality 300-DPI charts: `sus_and_workload_comparison.png`, `task_completion_time_by_scenario.png`, `warning_comprehension_and_accuracy.png`, and `user_burden_radar_chart.png`.
+  * Automated pytest suite (`test_usability_evaluation.py`) passing 5/5 tests.
+
 ---
 
 ## Model Evaluation Leaderboard (Step 6)
@@ -174,6 +185,6 @@ python evaluate_models.py
 
 ## Next Steps (Project Roadmap)
 
-* **Step 12 — Usability Evaluation (Mithun + Aditya):**
-  Conduct structured human-centered usability evaluation (System Usability Scale [SUS], User Burden Scale [UBS], NASA-TLX cognitive workload, completion times) across the interfaces of all three systems.
-* **Step 13 — Research Analysis & IEEE Paper (All)**
+* **Step 13 — Research Analysis & IEEE Paper (All):**
+  Synthesize all experimental, security, and usability findings from Steps 1–12 into an IEEE-format conference research paper (Introduction, Related Work, Threat Model, System Architecture, Experimental Results, HCI Evaluation, Limitations, and Conclusion).
+
