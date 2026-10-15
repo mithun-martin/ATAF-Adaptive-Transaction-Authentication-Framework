@@ -97,6 +97,20 @@ Each step of the ATAF project plan is housed in its own self-contained, fully wo
     - **System 3 (Proposed Adaptive):** 100% fraud defense with optimal low friction (2.0 steps) on benign transfers.
   * Verified with interactive demo (`demo_attack_scenarios.py`) and pytest suite (`test_attack_scenarios.py`).
 
+* **[Step 11 — Run Experimental Comparison](./Step11/)** (Responsible: All) ✅
+  * Rigorous empirical comparison of Baseline (System 1), Static 3FA (System 2), and Proposed Adaptive (System 3) across both the 88,581 IEEE-CIS test transactions and the social-engineering attack scenario set.
+  * Security benchmarks:
+    - **Attack Success Rate (ASR):** System 1 = 100.0% (Vulnerable) vs. System 2 = 0.0% vs. System 3 = **0.0%** (Protected).
+    - **Fraud Detection Rate (FDR):** System 1 = 0.0% vs. System 2 = 100.0% vs. System 3 = **100.0%**.
+    - **Large-Scale ROC-AUC:** 0.5000 (S1/S2) vs. **0.9468** (S3).
+    - **Large-Scale PR-AUC:** 0.0350 (S1/S2) vs. **0.6926** (S3).
+    - **False Acceptance Rate (FAR):** System 1 = 1.0000 vs. System 2 = 0.0000 vs. System 3 = **0.0929**.
+  * Usability & Authentication Burden:
+    - **Mean Transaction Time:** System 1 = 17.0s vs. System 2 = 32.2s (+89.4% penalty) vs. System 3 = **18.1s (Saves 14.1s per transfer!)**.
+    - **Step-Up Frequency:** System 1 = 0.0% vs. System 2 = 100.0% vs. System 3 = **4.78% (Targeted step-up)**.
+  * Generated 4 publication-quality plots: Pareto Frontier (`security_vs_burden.png`), Grouped Bar Chart (`metrics_comparison_barchart.png`), Scenario Breakdown (`attack_defense_comparison.png`), and Threshold Sensitivity Curve (`friction_tradeoff_curve.png`).
+  * Automated test suite (`test_experimental_comparison.py`) passing 3/3 tests.
+
 ---
 
 ## Model Evaluation Leaderboard (Step 6)
@@ -160,7 +174,6 @@ python evaluate_models.py
 
 ## Next Steps (Project Roadmap)
 
-* **Step 11 — Run Experimental Comparison (All):**
-  Benchmark Baseline (System 1), Static 3FA (System 2), and Proposed Adaptive (System 3) across Security metrics (Attack Success Rate, Fraud Detection Rate, False Acceptance, False Rejection, Precision, Recall, F1, PR-AUC) and Usability/Authentication Burden (Completion Time, Step Count, Step-Up Frequency).
-* **Step 12 — Usability Evaluation (Mithun + Aditya)**
+* **Step 12 — Usability Evaluation (Mithun + Aditya):**
+  Conduct structured human-centered usability evaluation (System Usability Scale [SUS], User Burden Scale [UBS], NASA-TLX cognitive workload, completion times) across the interfaces of all three systems.
 * **Step 13 — Research Analysis & IEEE Paper (All)**

@@ -1,0 +1,9 @@
+scenario_id,name,category,is_fraud,severity,amount,system_1_verdict,system_1_stopped,system_1_steps,system_2_verdict,system_2_stopped,system_2_steps,system_3_verdict,system_3_stopped,system_3_risk_score,system_3_risk_tier,system_3_steps
+SCN-01-OTP-VISHING,Classic OTP Voice Phishing (Bank Impersonation),OTP_HARVESTING,True,HIGH,12500.0,COMPROMISED,False,2,PREVENTED,True,3,PREVENTED,True,0.5,MEDIUM,2
+SCN-02-NEW-BENEFICIARY-MULE,New Beneficiary + Large Emergency Transfer (Family Impersonation),BENEFICIARY_MULE,True,CRITICAL,48000.0,COMPROMISED,False,2,PREVENTED,True,3,PREVENTED,True,0.7,HIGH,3
+SCN-03-REMOTE-ACCESS-TAKEOVER,Remote Access Tool Takeover (New Device + Large Transfer),REMOTE_ACCESS_TAKEOVER,True,CRITICAL,65000.0,COMPROMISED,False,2,PREVENTED,True,3,PREVENTED,True,0.7,HIGH,3
+SCN-04-OFF-HOURS-COERCION,Off-Hours Coercion ('Digital Arrest' Extortion),OFF_HOURS_COERCION,True,HIGH,35000.0,COMPROMISED,False,2,PREVENTED,True,3,PREVENTED,True,0.65,MEDIUM,2
+SCN-05-VOLUME-DRAIN-ANOMALY,Extreme Volume Deviation (Fake Investment / Ponzi Yield),VOLUME_ANOMALY,True,HIGH,90000.0,COMPROMISED,False,2,PREVENTED,True,3,PREVENTED,True,0.7,HIGH,3
+SCN-06-COMPOUND-MULTI-INDICATOR,Compound Multi-Indicator Attack (Advanced Account Takeover),COMPOUND_SUSPICIOUS,True,CRITICAL,75000.0,COMPROMISED,False,2,PREVENTED,True,3,PREVENTED,True,0.99,HIGH,3
+SCN-07-BENIGN-ROUTINE-GROCERY,Benign Routine Grocery Transfer (Control Baseline),BENIGN_CONTROL,False,LOW,650.0,BENIGN_AUTHORIZED,True,2,BENIGN_AUTHORIZED_WITH_BURDEN,True,3,OPTIMAL_BENIGN_AUTHORIZED,True,0.05,LOW,2
+SCN-08-BENIGN-MONTHLY-RENT,Benign Monthly Rent Payment (Control Baseline),BENIGN_CONTROL,False,LOW,15000.0,BENIGN_AUTHORIZED,True,2,BENIGN_AUTHORIZED_WITH_BURDEN,True,3,OPTIMAL_BENIGN_AUTHORIZED,True,0.05,LOW,2

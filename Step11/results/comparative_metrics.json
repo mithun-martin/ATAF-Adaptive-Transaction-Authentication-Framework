@@ -1,0 +1,160 @@
+{
+  "benchmark_metadata": {
+    "title": "ATAF Step 11: Experimental System Comparison",
+    "dataset": "IEEE-CIS Fraud Detection (88,581 Test Transactions)",
+    "attack_scenarios": "Step 10 Social-Engineering Catalog (6 Attacks, 2 Controls)",
+    "ai_engine": "XGBoost Classifier (Winner Model from Step 5 & 6)",
+    "policy_thresholds": {
+      "tau_1_low_medium": 0.3,
+      "tau_2_medium_high": 0.7
+    }
+  },
+  "social_engineering_metrics": {
+    "total_attack_scenarios": 6,
+    "total_control_scenarios": 2,
+    "system_1": {
+      "attack_success_rate": 100.0,
+      "fraud_detection_rate": 0.0,
+      "mean_steps_overall": 2.0,
+      "mean_steps_benign": 2.0
+    },
+    "system_2": {
+      "attack_success_rate": 0.0,
+      "fraud_detection_rate": 100.0,
+      "mean_steps_overall": 3.0,
+      "mean_steps_benign": 3.0
+    },
+    "system_3": {
+      "attack_success_rate": 0.0,
+      "fraud_detection_rate": 100.0,
+      "mean_steps_overall": 2.5,
+      "mean_steps_benign": 2.0
+    }
+  },
+  "dataset_security_metrics": {
+    "dataset_size": 88581,
+    "fraud_count": 3099,
+    "legitimate_count": 85482,
+    "system_1": {
+      "roc_auc": 0.5,
+      "pr_auc": 0.03498492904798998,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "far": 1.0,
+      "frr": 0.0,
+      "step_up_rate_pct": 0.0
+    },
+    "system_2": {
+      "roc_auc": 0.5,
+      "pr_auc": 0.03498492904798998,
+      "precision": 0.03498492904798998,
+      "recall": 1.0,
+      "f1": 0.06760471204188483,
+      "far": 0.0,
+      "frr": 1.0,
+      "step_up_rate_pct": 100.0
+    },
+    "system_3": {
+      "roc_auc": 0.9468,
+      "pr_auc": 0.6926,
+      "precision": 0.1545,
+      "recall": 0.9071,
+      "f1": 0.2641,
+      "far": 0.0929,
+      "frr": 0.1799,
+      "step_up_rate_pct": 4.78,
+      "step_up_fraud_recall_pct": 70.54,
+      "step_up_benign_friction_pct": 2.4,
+      "tp": 2811,
+      "fp": 15381,
+      "tn": 70101,
+      "fn": 288
+    }
+  },
+  "usability_burden_metrics": {
+    "system_1": {
+      "mean_auth_time_seconds": 17.0,
+      "mean_steps": 2.0,
+      "step_up_rate_pct": 0.0,
+      "friction_penalty_pct": 0.0
+    },
+    "system_2": {
+      "mean_auth_time_seconds": 32.2,
+      "mean_steps": 3.0,
+      "step_up_rate_pct": 100.0,
+      "friction_penalty_pct": 89.4
+    },
+    "system_3": {
+      "mean_auth_time_seconds": 18.12,
+      "mean_steps": 2.05,
+      "step_up_rate_pct": 4.78,
+      "friction_penalty_pct": 6.6
+    }
+  },
+  "summary_table": [
+    {
+      "Metric": "Attack Success Rate (ASR) on Social Engineering",
+      "System 1 (Baseline 2FA)": "100.0%",
+      "System 2 (Static 3FA)": "0.0%",
+      "System 3 (Proposed Adaptive)": "0.0%",
+      "Optimal Direction": "Lower is better (0.0% ideal)"
+    },
+    {
+      "Metric": "Fraud Detection Rate (FDR) on Social Engineering",
+      "System 1 (Baseline 2FA)": "0.0%",
+      "System 2 (Static 3FA)": "100.0%",
+      "System 3 (Proposed Adaptive)": "100.0%",
+      "Optimal Direction": "Higher is better (100.0% ideal)"
+    },
+    {
+      "Metric": "ROC-AUC Score",
+      "System 1 (Baseline 2FA)": "0.5000",
+      "System 2 (Static 3FA)": "0.5000",
+      "System 3 (Proposed Adaptive)": "0.9468",
+      "Optimal Direction": "Higher is better"
+    },
+    {
+      "Metric": "PR-AUC Score",
+      "System 1 (Baseline 2FA)": "0.0350",
+      "System 2 (Static 3FA)": "0.0350",
+      "System 3 (Proposed Adaptive)": "0.6926",
+      "Optimal Direction": "Higher is better"
+    },
+    {
+      "Metric": "False Acceptance Rate (FAR)",
+      "System 1 (Baseline 2FA)": "1.0000",
+      "System 2 (Static 3FA)": "0.0000",
+      "System 3 (Proposed Adaptive)": "0.0929",
+      "Optimal Direction": "Lower is better"
+    },
+    {
+      "Metric": "False Rejection / Alarm Rate (FRR)",
+      "System 1 (Baseline 2FA)": "0.0000",
+      "System 2 (Static 3FA)": "1.0000",
+      "System 3 (Proposed Adaptive)": "0.1799",
+      "Optimal Direction": "Lower is better"
+    },
+    {
+      "Metric": "Mean Authentication Steps",
+      "System 1 (Baseline 2FA)": "2.00",
+      "System 2 (Static 3FA)": "3.00",
+      "System 3 (Proposed Adaptive)": "2.05",
+      "Optimal Direction": "Lower is better (2.0 ideal for routine)"
+    },
+    {
+      "Metric": "Mean Transaction Time (Seconds)",
+      "System 1 (Baseline 2FA)": "17.0 s",
+      "System 2 (Static 3FA)": "32.2 s",
+      "System 3 (Proposed Adaptive)": "18.1 s",
+      "Optimal Direction": "Lower is better"
+    },
+    {
+      "Metric": "Percentage Requiring Step-Up 3FA",
+      "System 1 (Baseline 2FA)": "0.0%",
+      "System 2 (Static 3FA)": "100.0%",
+      "System 3 (Proposed Adaptive)": "4.8%",
+      "Optimal Direction": "Targeted (<10% ideal)"
+    }
+  ]
+}
