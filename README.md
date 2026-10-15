@@ -82,6 +82,21 @@ Each step of the ATAF project plan is housed in its own self-contained, fully wo
     - **HIGH RISK ($R \ge 0.70$):** Step-Up 3FA (PSD2 Art. 97 HMAC-SHA256 Transaction-Bound Seal + Affirmations + 4-digit PIN).
   * Interactive React + Tailwind CSS dashboard and FastAPI backend verified with automated integration test suite (`test_adaptive_system.py`).
 
+* **[Step 10 — Create Social-Engineering Attack Scenarios](./Step10/)** (Responsible: Aditya) ✅
+  * Defined standardized catalog of 6 social-engineering attack patterns and 2 benign usability control scenarios:
+    - `SCN-01`: Classic OTP Voice Phishing / Vishing (Bank Impersonation)
+    - `SCN-02`: New Beneficiary + Large Emergency Transfer (Family Impersonation)
+    - `SCN-03`: Remote Access Tool Takeover (AnyDesk / TeamViewer Screen-Sharing)
+    - `SCN-04`: Off-Hours Coercion ("Digital Arrest" Extortion at 02:45 AM)
+    - `SCN-05`: Extreme Volume Anomaly (Crypto / Ponzi Yield Investment Scam)
+    - `SCN-06`: Compound Multi-Indicator Takeover (Credential Stuffing + Velocity Burst + Night Transfer)
+    - `SCN-07` & `SCN-08`: Benign Grocery and Monthly Rent Control Baselines
+  * Multi-system simulation harness (`attack_simulator.py`) proving:
+    - **System 1 (Baseline 2FA):** 0% fraud defense (100% compromise rate on social engineering).
+    - **System 2 (Static 3FA):** 100% fraud defense, but imposes high friction (3.0 steps) on 100% of benign transfers.
+    - **System 3 (Proposed Adaptive):** 100% fraud defense with optimal low friction (2.0 steps) on benign transfers.
+  * Verified with interactive demo (`demo_attack_scenarios.py`) and pytest suite (`test_attack_scenarios.py`).
+
 ---
 
 ## Model Evaluation Leaderboard (Step 6)
@@ -145,8 +160,7 @@ python evaluate_models.py
 
 ## Next Steps (Project Roadmap)
 
-* **Step 10 — Create Social-Engineering Attack Scenarios (Aditya)**
-  Define representative social-engineering fraud scenarios (bank official impersonation, urgent refund scam, remote access/AnyDesk coercion, fake investment scam) to test against Baseline (System 1), Static 3FA (System 2), and Proposed Adaptive (System 3).
-* **Step 11 — Run Experimental Comparison (All)**
+* **Step 11 — Run Experimental Comparison (All):**
+  Benchmark Baseline (System 1), Static 3FA (System 2), and Proposed Adaptive (System 3) across Security metrics (Attack Success Rate, Fraud Detection Rate, False Acceptance, False Rejection, Precision, Recall, F1, PR-AUC) and Usability/Authentication Burden (Completion Time, Step Count, Step-Up Frequency).
 * **Step 12 — Usability Evaluation (Mithun + Aditya)**
 * **Step 13 — Research Analysis & IEEE Paper (All)**

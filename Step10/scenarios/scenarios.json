@@ -1,0 +1,386 @@
+[
+  {
+    "id": "SCN-01-OTP-VISHING",
+    "name": "Classic OTP Voice Phishing (Bank Impersonation)",
+    "category": "OTP_HARVESTING",
+    "severity": "HIGH",
+    "is_fraud": true,
+    "description": "Attacker calls victim posing as ATAF fraud department official. Informs victim that an unauthorized international debit of ₹12,500 is pending. Pretext convinces victim to recite the SMS OTP to 'cancel the fraudulent charge', while attacker actually executes a transfer to a mule account.",
+    "attacker_profile": {
+      "mitre_attack_technique": "T1566.002 - Spearphishing Voice / Vishing",
+      "pretext": "ATAF Bank Security Alert: Urgent verification required to reverse unauthorized charge.",
+      "delivery_channel": "Voice Call (Spoofed Caller ID)",
+      "victim_psychological_state": "Panicked and eager to prevent account loss"
+    },
+    "transaction": {
+      "amount": 12500.0,
+      "user_avg_amount": 4000.0,
+      "is_new_beneficiary": true,
+      "beneficiary_name": "Reversal Clearing Escrow",
+      "beneficiary_account": "998877665544",
+      "hour_of_day": 14,
+      "velocity_last_hour": 1,
+      "is_new_device": false,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": true,
+      "victim_signs_affirmation": false,
+      "victim_knows_pin": true
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "FAILED: Victim willingly provides OTP; baseline system authorizes fraudulent transfer.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "PREVENTED: Static 3FA displays recipient name 'Reversal Clearing Escrow' and prompts PIN.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "TRANSACTION_BINDING_3FA"],
+        "expected_defense_outcome": "PREVENTED: AI detects new beneficiary + 3x volume deviation; warning banner & parameter lock expose mule.",
+        "expected_friction_steps": 3
+      }
+    }
+  },
+  {
+    "id": "SCN-02-NEW-BENEFICIARY-MULE",
+    "name": "New Beneficiary + Large Emergency Transfer (Family Impersonation)",
+    "category": "BENEFICIARY_MULE",
+    "severity": "CRITICAL",
+    "is_fraud": true,
+    "description": "Attacker compromises a WhatsApp contact and contacts the victim posing as their nephew who was involved in an urgent road accident. Demands ₹48,000 immediate hospital deposit to a newly registered third-party UPI/bank account.",
+    "attacker_profile": {
+      "mitre_attack_technique": "T1657 - Financial Theft via Social Engineering Pretexting",
+      "pretext": "Emergency Medical Assistance: Critical surgery deposit required immediately.",
+      "delivery_channel": "WhatsApp Impersonation Message",
+      "victim_psychological_state": "High emotional distress / familial obligation"
+    },
+    "transaction": {
+      "amount": 48000.0,
+      "user_avg_amount": 3500.0,
+      "is_new_beneficiary": true,
+      "beneficiary_name": "City Care Emergency Clinic",
+      "beneficiary_account": "443322110099",
+      "hour_of_day": 16,
+      "velocity_last_hour": 1,
+      "is_new_device": false,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": true,
+      "victim_signs_affirmation": false,
+      "victim_knows_pin": true
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "FAILED: Victim enters password and OTP; transfer executes instantly to mule account.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "PREVENTED: Mandates additional confirmation, friction forces victim to review account.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "TRANSACTION_BINDING_3FA"],
+        "expected_defense_outcome": "PREVENTED: AI flags 13.7x volume deviation + new beneficiary (R >= 0.70); anti-coercion prompt prevents transfer.",
+        "expected_friction_steps": 3
+      }
+    }
+  },
+  {
+    "id": "SCN-03-REMOTE-ACCESS-TAKEOVER",
+    "name": "Remote Access Tool Takeover (New Device + Large Transfer)",
+    "category": "REMOTE_ACCESS_TAKEOVER",
+    "severity": "CRITICAL",
+    "is_fraud": true,
+    "description": "Victim receives a message about pending 5G SIM/KYC deactivation. Attacker instructs victim to install AnyDesk/TeamViewer to 'assist with configuration'. While remote session is active, attacker initiates a ₹65,000 transfer from a virtual browser session and watches SMS notifications for OTP.",
+    "attacker_profile": {
+      "mitre_attack_technique": "T1219 - Remote Access Software & T1539 - Session Stealing",
+      "pretext": "Mandatory Telecom KYC Verification to prevent immediate number suspension.",
+      "delivery_channel": "Remote Desktop Screen Sharing (AnyDesk)",
+      "victim_psychological_state": "Passive / Believes technician is handling routine maintenance"
+    },
+    "transaction": {
+      "amount": 65000.0,
+      "user_avg_amount": 5000.0,
+      "is_new_beneficiary": true,
+      "beneficiary_name": "Digital Services Hub",
+      "beneficiary_account": "778899001122",
+      "hour_of_day": 11,
+      "velocity_last_hour": 1,
+      "is_new_device": true,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": true,
+      "victim_signs_affirmation": false,
+      "victim_knows_pin": true
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "FAILED: Attacker reads OTP off victim's mirrored screen; full account drained.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "PREVENTED: Requires secret PIN not known to attacker and explicit user affirmations.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "TRANSACTION_BINDING_3FA"],
+        "expected_defense_outcome": "PREVENTED: Critical AI score triggers PSD2 Art. 97 parameter lock; explicit anti-remote-access clause blocks authorization.",
+        "expected_friction_steps": 3
+      }
+    }
+  },
+  {
+    "id": "SCN-04-OFF-HOURS-COERCION",
+    "name": "Off-Hours Coercion ('Digital Arrest' Extortion)",
+    "category": "OFF_HOURS_COERCION",
+    "severity": "HIGH",
+    "is_fraud": true,
+    "description": "Attacker calls at 02:45 AM impersonating cyber police / central enforcement agency. Accuses victim of involvement in money laundering. Under threat of immediate house raid, victim is coerced into transferring ₹35,000 'security bail deposit' to a government-sounding account.",
+    "attacker_profile": {
+      "mitre_attack_technique": "T1657 - Extortion & Coercion via Law Enforcement Impersonation",
+      "pretext": "Digital Arrest Warrant: Immediate verification deposit required before morning court order.",
+      "delivery_channel": "Video Call with fake police backdrop",
+      "victim_psychological_state": "Extreme terror, sleep-deprived confusion, panic"
+    },
+    "transaction": {
+      "amount": 35000.0,
+      "user_avg_amount": 4500.0,
+      "is_new_beneficiary": true,
+      "beneficiary_name": "Special Investigation Escrow",
+      "beneficiary_account": "123498765432",
+      "hour_of_day": 2,
+      "velocity_last_hour": 1,
+      "is_new_device": false,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": true,
+      "victim_signs_affirmation": false,
+      "victim_knows_pin": true
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "FAILED: Coerced victim inputs OTP at 2 AM; money transferred to fraudster.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "PREVENTED: Factor 3 anti-coercion confirmation requires conscious affirmative check.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "TRANSACTION_BINDING_3FA"],
+        "expected_defense_outcome": "PREVENTED: Night-hours flag (02:00) + new beneficiary + 7.7x amount triggers HIGH risk tier; coercive prompt aborted.",
+        "expected_friction_steps": 3
+      }
+    }
+  },
+  {
+    "id": "SCN-05-VOLUME-DRAIN-ANOMALY",
+    "name": "Extreme Volume Deviation (Fake Investment / Ponzi Yield)",
+    "category": "VOLUME_ANOMALY",
+    "severity": "HIGH",
+    "is_fraud": true,
+    "description": "Victim joined a fraudulent Telegram crypto trading community promising 400% weekly returns. Convinced by fabricated profit screenshots to transfer ₹90,000 (victim's regular median transfer is ₹4,000, representing a 22.5x volume deviation).",
+    "attacker_profile": {
+      "mitre_attack_technique": "T1657 - Financial Fraud via Investment Scam",
+      "pretext": "Institutional Crypto Arbitrage: High-yield guaranteed deposit allocation.",
+      "delivery_channel": "Telegram Investment Channel",
+      "victim_psychological_state": "Greed, fear of missing out (FOMO), high excitement"
+    },
+    "transaction": {
+      "amount": 90000.0,
+      "user_avg_amount": 4000.0,
+      "is_new_beneficiary": true,
+      "beneficiary_name": "Apex Yield Trading Corp",
+      "beneficiary_account": "665544332211",
+      "hour_of_day": 15,
+      "velocity_last_hour": 1,
+      "is_new_device": false,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": true,
+      "victim_signs_affirmation": false,
+      "victim_knows_pin": true
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "FAILED: 2FA allows extreme volume drain with zero anomaly friction.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "PREVENTED: Static 3FA forces confirmation and PIN check.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "TRANSACTION_BINDING_3FA"],
+        "expected_defense_outcome": "PREVENTED: AI model detects extreme tabular amount anomaly (R >= 0.70); strong step-up parameter lock stops drain.",
+        "expected_friction_steps": 3
+      }
+    }
+  },
+  {
+    "id": "SCN-06-COMPOUND-MULTI-INDICATOR",
+    "name": "Compound Multi-Indicator Attack (Advanced Account Takeover)",
+    "category": "COMPOUND_SUSPICIOUS",
+    "severity": "CRITICAL",
+    "is_fraud": true,
+    "description": "Attacker acquires leaked credentials and performs an automated burst session: initiates 3 consecutive rapid transfers, adds an offshore mule, and transfers ₹75,000 at 03:15 AM while flooding victim's phone with spam to distract them.",
+    "attacker_profile": {
+      "mitre_attack_technique": "T1110 - Brute Force / Credential Stuffing & T1499 - Denial of Service Spam",
+      "pretext": "Automated account liquidation via compromised credentials during distraction window.",
+      "delivery_channel": "Automated Scripting / Web Bot",
+      "victim_psychological_state": "Distracted by SMS bombing / unaware"
+    },
+    "transaction": {
+      "amount": 75000.0,
+      "user_avg_amount": 5000.0,
+      "is_new_beneficiary": true,
+      "beneficiary_name": "Offshore Merchant Services",
+      "beneficiary_account": "887766554433",
+      "hour_of_day": 3,
+      "velocity_last_hour": 3,
+      "is_new_device": true,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": true,
+      "victim_signs_affirmation": false,
+      "victim_knows_pin": false
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "FAILED: If OTP is intercepted or phished, System 1 authorizes entire transfer.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "PREVENTED: Attacker lacks victim's offline Transaction Security PIN.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": false,
+        "expected_factors": ["PASSWORD", "OTP", "TRANSACTION_BINDING_3FA"],
+        "expected_defense_outcome": "PREVENTED: Compound score R=0.95 (velocity + new beneficiary + off-hours + amount); HMAC parameter seal and PIN defeat attack.",
+        "expected_friction_steps": 3
+      }
+    }
+  },
+  {
+    "id": "SCN-07-BENIGN-ROUTINE-GROCERY",
+    "name": "Benign Routine Grocery Transfer (Control Baseline)",
+    "category": "BENIGN_CONTROL",
+    "severity": "LOW",
+    "is_fraud": false,
+    "description": "Legitimate user transferring ₹650 for weekly vegetables and groceries to their regular local vendor at 2:30 PM. Established recipient, typical volume, daytime execution.",
+    "attacker_profile": {
+      "mitre_attack_technique": "None (Legitimate User Activity)",
+      "pretext": "None (Routine local commerce)",
+      "delivery_channel": "Mobile Banking Client",
+      "victim_psychological_state": "Normal / Relaxed"
+    },
+    "transaction": {
+      "amount": 650.0,
+      "user_avg_amount": 5000.0,
+      "is_new_beneficiary": false,
+      "beneficiary_name": "Fresh Harvest Local Grocery",
+      "beneficiary_account": "110022993388",
+      "hour_of_day": 14,
+      "velocity_last_hour": 0,
+      "is_new_device": false,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": false,
+      "victim_signs_affirmation": true,
+      "victim_knows_pin": true
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "BENIGN AUTHORIZED: Password + OTP approves routine payment in 2 steps.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "USABILITY BURDEN: Forces high friction (Factor 3 PIN + checkboxes) for trivial ₹650 purchase.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "OPTIMAL ADAPTIVE UX: Risk R < 0.30 (LOW); executes immediately with 2FA and zero unnecessary friction.",
+        "expected_friction_steps": 2
+      }
+    }
+  },
+  {
+    "id": "SCN-08-BENIGN-MONTHLY-RENT",
+    "name": "Benign Monthly Rent Payment (Control Baseline)",
+    "category": "BENIGN_CONTROL",
+    "severity": "LOW",
+    "is_fraud": false,
+    "description": "Legitimate user transferring ₹15,000 monthly apartment rent to their established landlord on the 1st of the month at 11:30 AM.",
+    "attacker_profile": {
+      "mitre_attack_technique": "None (Legitimate User Activity)",
+      "pretext": "None (Regular housing contractual obligation)",
+      "delivery_channel": "Web Banking Portal",
+      "victim_psychological_state": "Normal"
+    },
+    "transaction": {
+      "amount": 15000.0,
+      "user_avg_amount": 8000.0,
+      "is_new_beneficiary": false,
+      "beneficiary_name": "S. K. Landlord",
+      "beneficiary_account": "334455667788",
+      "hour_of_day": 11,
+      "velocity_last_hour": 0,
+      "is_new_device": false,
+      "victim_provides_otp": true,
+      "victim_heeds_warning_banner": false,
+      "victim_signs_affirmation": true,
+      "victim_knows_pin": true
+    },
+    "expectations": {
+      "system_1": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "BENIGN AUTHORIZED: Standard 2FA completes rent payment.",
+        "expected_friction_steps": 2
+      },
+      "system_2": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP", "ADDITIONAL_CONFIRMATION"],
+        "expected_defense_outcome": "USABILITY BURDEN: Enforces redundant 3FA checks on trusted landlord.",
+        "expected_friction_steps": 3
+      },
+      "system_3": {
+        "expected_authorized": true,
+        "expected_factors": ["PASSWORD", "OTP"],
+        "expected_defense_outcome": "OPTIMAL ADAPTIVE UX: R < 0.30 (LOW); completes seamlessly without false positive alarm.",
+        "expected_friction_steps": 2
+      }
+    }
+  }
+]
